@@ -1,7 +1,9 @@
+import Layout from '../../components/Layout'
+
 export default function index() {
     return (
-        <div>
-            
-        </div>
+        <Layout>
+            <h1>My Meets</h1>
+        </Layout>
     )
 }
