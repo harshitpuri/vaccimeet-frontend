@@ -1,14 +1,19 @@
 import Head from 'next/head'
-import styles from '../styles/Layout.module.css'
+import Header from './Header'
+import Footer from './Footer'
+import styles from '@/styles/Layout.module.css'
 
-export default function Layout({title, keywords, description, children}) {
+export default function Layout({ title, keywords, description, children }) {
     return (
+
         <div>
             <Head>
                 <title>{title}</title>
                 <meta name='description' content={description} />
                 <meta name='keywords' content={keywords} />
             </Head>
+
+        <Header />
 
         <div className={styles.container}>
             {children}
@@ -23,5 +28,5 @@ export default function Layout({title, keywords, description, children}) {
 Layout.defaultProps = {
     title: 'VacciMeet',
     description: 'Meet with vaccinated people around your area',
-    keywords: 'covid-19, vaccine, covishield'
+    keywords: 'covid-19, vaccine, covishield',
 }
