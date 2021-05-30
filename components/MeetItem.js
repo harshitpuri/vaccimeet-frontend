@@ -6,13 +6,14 @@ export default function MeetItem({ evt }) {
     return (
         <div className={styles.meet}>
             <div className={styles.img}>
-                <Image src={evt.image ? evt.image : '/images/meet-default.png'} width={170} height={100} />
+                <Image src={evt.image ? evt.image.formats.thumbnail.url : '/images/meet-default.png'} width={170} height={100} />
             </div>
             <div className={styles.info}>
                 <span>
-                    {evt.date} at {evt.time}
+                    {new Date(evt.date).toLocaleDateString('en-GB')} at {evt.time}
                 </span>
                 <h3>{evt.name}</h3>
+                <span>{evt.vaccine} || {evt.minlevel}</span>
             </div>
             <div className={styles.link}>
                 <Link href={`/meets/${evt.slug}`}>
