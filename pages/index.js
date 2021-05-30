@@ -23,11 +23,11 @@ export default function MeetsHome({ meets }) {
 }
 
 export async function getStaticProps() {
-  const res = await fetch(`${API_URL}/api/meets`)
+  const res = await fetch(`${API_URL}/meets?_sort=date:ASC&_limit=3`)
   const meets = await res.json()
 
   return {
-    props: { meets:meets.slice(0, 3) },
+    props: { meets },
     revalidate: 1
   }
 

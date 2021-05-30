@@ -22,17 +22,21 @@ export default function MeetPage({evt}) {
                 </div>
 
                 <span>
-                    {evt.date} at {evt.time}
+                {new Date(evt.date).toLocaleDateString('en-GB')} at {evt.time}
                 </span>
                 <h1>{evt.name}</h1>
                     {evt.image && (
                         <div className={styles.image}>
-                            <Image src={evt.image} width={960} height={600} />
+                            <Image src={evt.image.formats.medium.url} width={960} height={600} />
                         </div>
                     )}
 
                 <h3>Host:</h3>
                     <p>{evt.host}</p>
+                <h3>Vaccine:</h3>
+                    <p>{evt.vaccine}</p>
+                <h3>Level of Vaccination:</h3>
+                    <p>{evt.minlevel}</p>
                 <h3>Description</h3>
                     <p>{evt.description}</p>
                 <h3>Venue: {evt.venue}</h3>
@@ -49,7 +53,7 @@ export default function MeetPage({evt}) {
 
 export async function getServerSideProps({query: {slug}}) {
 
-    const res = await fetch(`${API_URL}/api/meets/${slug}`)
+    const res = await fetch(`${API_URL}/meets?slug=${slug}`)
     const meets = await res.json()
 
     return {
