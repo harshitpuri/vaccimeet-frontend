@@ -20,6 +20,11 @@ export default function Header() {
                         <a>Meets</a>
                         </Link>
                     </li>
+                    <li>
+                        <Link href='/meets/add'>
+                            <a>Add Meet</a>
+                        </Link>
+                    </li>
                 </ul>
             </nav>
             
