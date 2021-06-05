@@ -1,12 +1,30 @@
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css'; 
 import Link from 'next/link'
 import { FaPencilAlt, FaTimes } from 'react-icons/fa'
 import Image from 'next/image'
 import Layout from '@/components/Layout'
 import {API_URL} from '@/config/index'
 import styles from '@/styles/Meet.module.css'
+import {useRouter} from 'next/router';
 
 export default function MeetPage({evt}) {
-    const deleteMeet = (e) => {
+    const router = useRouter()
+
+    const deleteMeet = async (e) => {
+        if(confirm('Are you sure?')) {
+            const res = await fetch(`${API_URL}/meets/${evt.id}`, {
+                method: 'DELETE'
+            })
+        }
+
+        const data = await res.json()
+
+        if(!res.ok) {
+            toast.error(data.message)
+        } else {
+            router.push('/meets')
+        }
 
     }
     return (
@@ -25,6 +43,7 @@ export default function MeetPage({evt}) {
                 {new Date(evt.date).toLocaleDateString('en-GB')} at {evt.time}
                 </span>
                 <h1>{evt.name}</h1>
+                <ToastContainer />
                     {evt.image && (
                         <div className={styles.image}>
                             <Image src={evt.image.formats.medium.url} width={960} height={600} />
