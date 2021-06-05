@@ -5,7 +5,7 @@ export default function Showcase() {
         <div>
             <div className={styles.showcase}>
                 <h1>Welcome to VacciMeet!</h1>
-                <h2>Find all the COVID-free Meetups happening around you</h2>
+                <h2>Find all the Vaccinated and COVID-free Meetups happening around you</h2>
             </div>
         </div>
     )
