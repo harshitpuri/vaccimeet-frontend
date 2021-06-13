@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { API_URL } from '@/config/'
 import { FaPencilAlt, FaTimes } from 'react-icons/fa'
 import styles from '@/styles/DashboardMeet.module.css'
 

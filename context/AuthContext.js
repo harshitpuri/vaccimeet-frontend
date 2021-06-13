@@ -8,9 +8,29 @@ export const AuthProvider = ({children}) => {
     const [user, setUser] = useState(null)
     const [error, setError] = useState(null)
 
+    const router = useRouter()
+
+    useEffect(() => checkUserLoggedIn(), [])
+
     // Registered User
     const register = async (user) => {
+        const res = await fetch(`${NEXT_URL}/api/register`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'applications/json'
+            },
+            body: JSON.stringify(user)
+        })
 
+        const data = await res.json()
+
+        if (res.ok) {
+            setUser(data.user)
+            router.push('/account/dashboard')
+        } else {
+            setError(data.message)
+            setError(null)
+        }
     }
 
     // Login User
@@ -28,21 +48,36 @@ export const AuthProvider = ({children}) => {
 
         const data = await res.json()
 
-        if(res.ok) {
-
+        if (res.ok) {
+            setUser(data.user)
+            router.push('/account/dashboard')
         } else {
-            
+            setError(data.message)
+            setError(null)
         }
     }
 
     // Logout User
     const logout = async () => {
-        
+        const res = await fetch(`${NEXT_URL}/api/logout`, {
+            method: 'POST',
+        })
+        if (res.ok) {
+            setUser(null)
+            router.push('/')
+        } 
     }
 
     // Check if user is already logged in
     const checkUserLoggedIn = async (user) => {
-        
+        const res = await fetch(`${NEXT_URL}/api/user`)
+        const data = await res.json()
+
+        if(res.ok) {
+            setUser(data.user)
+        } else {
+            setUser(null)
+        }
     }
 
     return (

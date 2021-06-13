@@ -1,7 +1,8 @@
-import moment from 'moment';
+import moment from 'moment'
 import { FaImage } from 'react-icons/fa'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { parseCookies } from '@/helpers/index'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -13,7 +14,7 @@ import { API_URL } from '@/config/index'
 import styles from '@/styles/Form.module.css'
 import { values } from 'lodash'
 
-export default function MeetPage({ evt }) {
+export default function MeetPage({ evt, token }) {
  const [value, setValues] = useState({
     name: evt.name,
     host: evt.host,
@@ -44,12 +45,17 @@ export default function MeetPage({ evt }) {
     const res = await fetch(`${API_URL}/meets/${evt.id}`, {
         method: 'PUT',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(values)
     })
 
     if(!res.ok) {
+        if(res.status === '403' || res.status === 401) {
+            toast.error('Unauthorized')
+            return
+        }
         toast.error('Something went wrong')
     } else {
         const evt = await res.json()
@@ -189,19 +195,22 @@ export default function MeetPage({ evt }) {
                 </div>
 
                 <Modal show={showModal} onClose={() => setShowModal(false)}>
-                    <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} />
+                    <ImageUpload evtId={evt.id} imageUploaded={imageUploaded} token={token} />
                 </Modal>
         </Layout>
     )
 }
 
 export async function getServerSideProps({params: {id}, req }) {
+    const {token} = parseCookies(req)
+
     const res = await fetch(`${API_URL}/meets/${id}`)
     const evt = await res.json()
 
     return {
         props: {
-            evt
+            evt,
+            token
         }
     }
 }

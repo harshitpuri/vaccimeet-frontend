@@ -1,12 +1,30 @@
 import { parseCookies } from '@/helpers/index'
+import {useRouter} from 'next/router'
 import Layout from '@/components/Layout'
 import DashboardMeet from '@/components/DashboardMeet'
-import { API_URL } from '@/config/'
+import { API_URL } from '@/config/index'
 import styles from '@/styles/Dashboard.module.css'
 
-export default function DashboardPage({meets}) {
-    const deleteMeet = (id) => {
-        
+export default function DashboardPage({ meets, token }) {
+    const router = useRouter()
+
+    const deleteMeet = async (id) => {
+        if (confirm('Are you sure?')) {
+            const res = await fetch(`${API_URL}/meets/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+        const data = await res.json()
+
+        if(!res.ok) {
+            toast.error(data.message)
+        } else {
+            router.reload('/meets')
+        }
+
     }
 
     return (
@@ -21,13 +39,13 @@ export default function DashboardPage({meets}) {
             </div>
         </Layout>
     )
-}
+} }
 
 export async function getServerSideProps({req}) {
     const {token} = parseCookies(req)
 
     const res = await fetch(`${API_URL}/meets/me`, {
-        method: 'POST'
+        method: 'POST',
         headers: {
             Authorization: `Bearer ${token}`
         }
@@ -37,7 +55,8 @@ export async function getServerSideProps({req}) {
 
     return {
         props: {
-            events
+            events,
+            token
         }
     }
 }

@@ -4,40 +4,18 @@ import Link from 'next/link'
 import { FaPencilAlt, FaTimes } from 'react-icons/fa'
 import Image from 'next/image'
 import Layout from '@/components/Layout'
+import MeetMap from '@/components/MeetMap'
 import {API_URL} from '@/config/index'
 import styles from '@/styles/Meet.module.css'
 import {useRouter} from 'next/router';
 
 export default function MeetPage({evt}) {
     const router = useRouter()
-
-    const deleteMeet = async (e) => {
-        if(confirm('Are you sure?')) {
-            const res = await fetch(`${API_URL}/meets/${evt.id}`, {
-                method: 'DELETE'
-            })
-        }
-
-        const data = await res.json()
-
-        if(!res.ok) {
-            toast.error(data.message)
-        } else {
-            router.push('/meets')
-        }
-
-    }
+    
     return (
         <Layout>
             <div className={styles.meet}>
-                <div className={styles.controls}>
-                    <Link href={`/meets/edit/${evt.id}`}>
-                        <a>
-                            <FaPencilAlt /> Edit Meet
-                        </a>
-                    </Link>
-                    <a href="#" className={styles.delete} onClick={deleteMeet}><FaTimes /> Delete Meet</a>
-                </div>
+
 
                 <span>
                 {new Date(evt.date).toLocaleDateString('en-GB')} at {evt.time}
@@ -60,6 +38,7 @@ export default function MeetPage({evt}) {
                     <p>{evt.description}</p>
                 <h3>Venue: {evt.venue}</h3>
                     <p>{evt.address}</p>
+                <MeetMap evt={evt} />
 
                 <Link href='/meets'>
                     <a className={styles.back}>{'<'}Go Back</a>

@@ -1,5 +1,6 @@
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import { parseCookies } from '@/helpers/index'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -8,7 +9,7 @@ import { API_URL } from '@/config/index'
 import styles from '@/styles/Form.module.css'
 import { values } from 'lodash'
 
-export default function AddMeetPage() {
+export default function AddMeetPage({token}) {
  const router = useRouter()
   
  const [value, setValues] = useState({
@@ -35,12 +36,17 @@ export default function AddMeetPage() {
     const res = await fetch(`${API_URL}/meets`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+             Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(values)
     })
 
     if(!res.ok) {
+        if(res.status === '403' || res.status === 401) {
+            toast.error('No token included')
+            return
+        }
         toast.error('Something went wrong')
     } else {
         const evt = await res.json()
@@ -160,4 +166,14 @@ export default function AddMeetPage() {
             </form>
         </Layout>
     )
+}
+
+export async function getServerSideProps({req}) {
+    const {token} = parseCookies(req)
+
+    return {
+        props: {
+            token
+        }
+    }
 }

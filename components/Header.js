@@ -25,8 +25,9 @@ export default function Header() {
                             <a>Meets</a>
                         </Link>
                     </li>
-                    {user ? <>
+                    {user ? (
                         // If logged in
+                        <>
                         <li>
                             <Link href='/meets/add'>
                                 <a>Add Meet</a>
@@ -42,16 +43,20 @@ export default function Header() {
                                 <FaSignOutAlt />Logout
                             </button>
                         </li>
-                    </> : <>
+                      </>  
+                    ) : (
                         // If logged out
+                        <>
                         <li>
                             <Link href='/account/login'>
                                 <a className='btn-secondary btn-icon'><FaSignInAlt /> Login</a>
                             </Link>
                         </li>
-                    </>}
+                    </>
+                    )}
 
                 </ul>
+
             </nav>
             
         </header>
